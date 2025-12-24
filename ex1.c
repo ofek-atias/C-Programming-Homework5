@@ -1,7 +1,16 @@
 #include <stdio.h>
 
 unsigned int largest_power_of_2(unsigned int n) {
-  // TODO
+  
+  unsigned int res = n;
+
+  res |= res >> 1;
+  res |= res >> 2;
+  res |= res >> 4;
+  res |= res >> 8;
+  res |= res >> 16;
+  
+  return res - (res >> 1); 
 }
 
 int main() {
