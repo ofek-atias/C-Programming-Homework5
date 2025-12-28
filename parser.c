@@ -1,4 +1,5 @@
 // TODO: add your includes here
+#include "parser.h"
 
 #define FIELDS_LEN(flags) (sizeof(flags) / sizeof(flags_t))
 
@@ -44,8 +45,13 @@ void print_help() {
 err_t parse_args(int argc, const char *argv[], header_t *p_hdr) {
 
   // TODO: check parameters
+  if(p_hdr->version < FIELDS_MIN || p_hdr->version > VERSION_MAX || p_hdr->length < FIELDS_MIN || p_hdr->length > LENGTH_MAX || p_hdr->type < FIELDS_MIN || p_hdr->type > PACKET_TYPE_MAX || p_hdr->src_node < FIELDS_MIN || p_hdr->src_node > NODE_MAX || p_hdr->dst_node < FIELDS_MIN || p_hdr->dst_node > NODE_MAX || p_hdr->priority < FIELDS_MIN || p_hdr->priority > PRIORITY_MAX || p_hdr->encrypted < FIELDS_MIN || p_hdr->encrypted > ENCRYPTED)
+    return ERR_PARAMS;
 
   // TODO: check number of arguments
+  printf("Error: number of given arguements %d is different than expected");
+
+
 
   // TODO: parse the arguments
 }
