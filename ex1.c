@@ -25,7 +25,7 @@ int main() {
   L = largest_power_of_2(n);
 
   // print the result to the user
-  printf("The Largest Power of 2 Smaller or Equal to %u is: %u:\n", n, L);
+  printf("The Largest Power of 2 Smaller or Equal to %u is: %u\n", n, L);
 
   return 0;
 }
