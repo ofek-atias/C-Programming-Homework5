@@ -1,7 +1,8 @@
 #include <stdio.h>
 
 #define SIZE_BYTES 1 
-#define MAX_FILE_SIZE 1048576  //1 MB
+#define MAX_FILE_SIZE 1048576  //1 MB (2^20 byte)
+#define MAX_NUM_BYTES 256
 
 typedef struct {
   unsigned long int cnt_1;
@@ -23,13 +24,14 @@ static stats_t compute_stats(FILE *file) {
 
   stats_t stats = {0, 0, 0, 0, 0};
   unsigned char buffer[MAX_FILE_SIZE];
-  unsigned long freq[256] = {0};
+  unsigned long freq[MAX_NUM_BYTES] = {0};
   size_t bytes_read = 0;
 
   bytes_read = fread(buffer, 1, MAX_FILE_SIZE, file);
   stats.cnt_bytes = (unsigned long)bytes_read;
 
-  if (stats.cnt_bytes == 0) return stats;
+  if (stats.cnt_bytes == 0) 
+    return stats;
 
   for (size_t i = 0; i < bytes_read; i++) {
       unsigned char current_byte = buffer[i];
@@ -41,12 +43,15 @@ static stats_t compute_stats(FILE *file) {
       for (int b = 0; b < 8; b++) {
           if ((current_byte >> b) & 1) {
               stats.cnt_1++;
-          } else {
+          }
+
+          else {
               stats.cnt_0++;
           }
       }
       // Determine most frequent byte 
     unsigned long max_freq = 0;
+    
     for (int i = 0; i < 256; i++) {
         if (freq[i] > max_freq) {
             max_freq = freq[i];
@@ -56,10 +61,12 @@ static stats_t compute_stats(FILE *file) {
     }
 
     // Determine middle byte
-    stats.byte_mdl = buffer[bytes_read / 2];
-
-    return stats;
+    
   }
+
+  stats.byte_mdl = buffer[bytes_read / 2];
+
+  return stats;
 }
 
 int main(int argc, char *argv[]) {
@@ -72,8 +79,8 @@ int main(int argc, char *argv[]) {
   }
 
   FILE *file = fopen(argv[1], "rb");
-  if (!file) {
-    printf("Error opening file: %s\n", argv[1]); // [cite: 76, 77]
+  if (file == NULL) {
+    printf("Error opening file: %s\n", argv[1]);
     return 0;
   }
 
