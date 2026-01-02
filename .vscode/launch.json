@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C Debug Active File",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+            "args": ["-v", "1", "-l", "2222", "-k", "17", "-s", "123", "-d", "89", "-p", "2", "-e", "1"], 
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe", // Double-check this path on your PC
+            "preLaunchTask": "build-all"
+        }
+    ]
+}

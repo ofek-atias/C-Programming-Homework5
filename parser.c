@@ -1,7 +1,4 @@
 #include "parser.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 #define FIELDS_LEN(flags) (sizeof(flags) / sizeof(flags_t))
 
@@ -52,23 +49,42 @@ static const flags_t* get_flag_info(const char* arg) {
     return NULL;
 }
 
+int string_to_uint(const char* s, unsigned int* out)
+{
+    char* end;
+    unsigned long val;
+
+    errno = 0;
+    val = strtoul(s, &end, 10);
+
+    /* No digits found */
+    if (end == s)
+        return -1;
+
+    /* Extra characters after number */
+    if (*end != '\0')
+        return -1;
+
+    /* Overflow or underflow */
+    if (errno == ERANGE || val > UINT_MAX)
+        return -1;
+
+    *out = (unsigned int)val;
+    return 1;
+}
+
 // parse the arguments, and fill p_hdr
 err_t parse_args(int argc, const char *argv[], header_t *p_hdr) {
 
   // TODO: check parameters
   if (p_hdr == NULL || argv == NULL) {
-      return ERR_PARAMS;
+    return ERR_PARAMS;
   }
 
   // TODO: check number of arguments
-  if ((argc == 2 && strcmp(argv[1], HELP_FLAG) == 0) || (argc == 1)) {
-      print_help();
-      return OK;
-  }
-
   if (argc != 15) {
-      printf("Error: number of given arguements %d is different than expected\n", argc);
-      return ERR_NUM_ARGS;
+    printf("Error: number of given arguements %d is different than expected\n", argc);
+    return ERR_NUM_ARGS;
   }
 
   // TODO: parse the arguments
@@ -76,18 +92,32 @@ err_t parse_args(int argc, const char *argv[], header_t *p_hdr) {
       const flags_t* info = get_flag_info(argv[i]);
 
       if (info == NULL) {
-          printf("Error: Unknown flag: \"%s\"\n", argv[i]);
-          return ERR_UNKNOWN_FLAG;
+        printf("Error: Unknown flag: \"%s\"\n", argv[i]);
+        return ERR_UNKNOWN_FLAG;
       }
 
-      if (i + 1 >= argc) { //further clarification is required
-          printf("Error: Missing argument for flag \"%s\"\n", argv[i]);
-          return ERR_MISSING_ARG;
+      /*
+        Take a look at the example of such arguments:
+        argv = {"ex4.exe", "-v", "1", "-t"}
+        argc = 4
+        In the first iteration, i = 1, and it works fine.
+        In the second iteration, i = 3, which means our current value is "-t".
+        This is the last value in the argv array, and we are about to check the next one (with i + 1).
+        Before we do that, we need to check that i + 1 is within the argv size (argc), because if not,
+        in this example, we are gonna get an out_of_range error (since i + 1 = 4, and there is no index 4 in argv).
+      */
+      if (i + 1 >= argc) {
+        printf("Error: Missing argument for flag \"%s\"\n", argv[i]);
+        return ERR_MISSING_ARG;
       }
 
-      int val = atoi(argv[i+1]);
+      unsigned int val;
+      if (string_to_uint(argv[i+1], &val) == -1) {
+        printf("Error: Missing argument for flag \"%s\"\n", argv[i]);
+        return ERR_MISSING_ARG;
+      }
 
-      if (val < (int)info->min || val > (int)info->max) {
+      if (val < info->min || val > info->max) {
           printf("Error: value %d for flag \"%s\" (%s) is out of range [%u-%u]\n", val, info->short_name, info->long_name, info->min, info->max);
           return ERR_INVALID_VALUE;
       }

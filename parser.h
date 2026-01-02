@@ -2,6 +2,9 @@
 #define __PARSER_H__
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define HELP_FLAG "-h"
 

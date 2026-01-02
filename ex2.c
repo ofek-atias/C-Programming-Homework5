@@ -6,7 +6,7 @@ bool is_binary_palindrome(unsigned int n)
   int msb_idx = -1;
   unsigned int temp = n;
   unsigned int reversed = 0;
-  while(temp != 0)
+  while (temp != 0)
   {
     temp >>= 1;
     msb_idx += 1;
@@ -17,7 +17,7 @@ bool is_binary_palindrome(unsigned int n)
 
   temp = n;
 
-  for(int j = 0; j <= msb_idx; j++)
+  for (int j = 0; j <= msb_idx; j++)
   {
     reversed <<= 1;
     reversed |= (temp & 1);
@@ -27,7 +27,7 @@ bool is_binary_palindrome(unsigned int n)
   if (n == reversed)
     return true;
   else 
-  return false;
+    return false;
 }
 
 int main() {
