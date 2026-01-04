@@ -29,7 +29,7 @@ static unsigned int encode_packet_header(header_t* hdr) {
   temp = temp >> 3;
 
   while (temp != 0) {
-    if (temp & 1 == 1) {
+    if ((temp & 1) == 1) {
       count++;
     }
     temp = temp >> 1;
@@ -54,19 +54,18 @@ int main(int argc, const char *argv[]) {
       return OK;
   }
 
-  header_t* hdr = (header_t*)malloc(sizeof(header_t));
+  header_t hdr = {};
 
   // TODO: parse arguments
-  err_t status = parse_args(argc, argv, hdr);
+  err_t status = parse_args(argc, argv, &hdr);
 
   if (status == OK) {
     // TODO: encode the packet header
-    unsigned int packet = encode_packet_header(hdr);
+    unsigned int packet = encode_packet_header(&hdr);
 
     // TODO: print the encoded header
     print_header(packet);
   }
 
-  free(hdr);
   return OK;
 }
