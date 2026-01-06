@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "args": ["-v", "1", "-l", "8", "-t", "17", "-s", "123", "-d", "83", "-p", "0", "-e", "0"], 
+            "args": ["-v", "1", "-v", "2", "-t", "17", "-s", "123", "-d", "83", "-p", "0", "-e", "0"], 
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

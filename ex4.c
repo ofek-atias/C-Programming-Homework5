@@ -54,7 +54,7 @@ int main(int argc, const char *argv[]) {
       return OK;
   }
 
-  header_t hdr = {};
+  header_t hdr = {0};
 
   // TODO: parse arguments
   err_t status = parse_args(argc, argv, &hdr);
